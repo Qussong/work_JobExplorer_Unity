@@ -12,6 +12,7 @@ namespace GH
         /// <summary>
         /// ¡é¡é¡é¡é¡é¡é¡é¡é¡é¡é¡é¡é¡é¡é¡é Singleton ¡é¡é¡é¡é¡é¡é¡é¡é¡é¡é¡é¡é¡é¡é¡é
         /// </summary>
+        #region Singleton
 
         private static AdminManager instance = null;
         private static readonly object lockKey = new object();
@@ -51,6 +52,13 @@ namespace GH
                 Destroy(gameObject);
                 return;
             }
+
+            CustomAwake();
+        }
+
+        #endregion
+        private void CustomAwake()
+        {
 
         }
 

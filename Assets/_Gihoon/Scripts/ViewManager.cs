@@ -1,15 +1,53 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace GH
 {
+    /// <summary>
+    /// 
+    /// [ Panel Hirarchy ]
+    /// =============================
+    /// | Canvas                    |
+    /// |     ¦¦ Intro               |
+    /// |     ¦¦ Main                |
+    /// |         ¦¦ Content         |
+    /// |             ¦¦ Selection   |
+    /// |             ¦¦ First       |
+    /// |             ¦¦ Second      |
+    /// |             ¦¦ Third       |
+    /// |             ¦¦ Fourth      |
+    /// |             ¦¦ Fifth       |
+    /// |             ¦¦ Sixth       |
+    /// =============================
+    /// 
+    /// </summary>
+
+    public enum EPanelName
+    {
+        INTRO,
+        MAIN,
+        CONTENT,
+        SELECTION,
+        FIRST,
+        SECOND,
+        THIRD,
+        FOURTH,
+        FIFTH,
+        SIXTH,
+        MAX_CNT,
+        NONE
+    }
+
     public class ViewManager : MonoBehaviour
     {
 
         /// <summary>
         /// ¡é¡é¡é¡é¡é¡é¡é¡é¡é¡é¡é¡é¡é¡é¡é Singleton ¡é¡é¡é¡é¡é¡é¡é¡é¡é¡é¡é¡é¡é¡é¡é
         /// </summary>
+        #region Singleton
 
         private static ViewManager instance = null;
         private static readonly object lockKey = new object();
@@ -35,7 +73,6 @@ namespace GH
                 return instance;
             }
         }
-
         public void Awake()
         {
             if (null == instance)
@@ -50,6 +87,78 @@ namespace GH
                 return;
             }
 
+            CustomAwake();
         }
+
+        #endregion
+
+        [Header("Essential Property")]
+        [SerializeField][ReadOnly] private List<string> panelNames = null;
+        [SerializeField][ReadOnly] private List<GameObject> panels = new List<GameObject>();
+        [SerializeField][ReadOnly] private EPanelName curPanel = EPanelName.NONE;
+
+        public EPanelName CurPanel
+        {
+            get { return curPanel; }
+            set { curPanel = value; }
+        }
+
+        private void CustomAwake()
+        {
+            string[] names = {
+                "panel-intro",      // EPanelName:INTRO
+                "panel-main",       // EPanelName::MAIN
+                "panel-content",    // EPanelName::CONTENT
+                "panel-selection",  // EPanelName::SELECTION
+                "panel-first",      // EPanelName::FIRST
+                "panel-second",     // EPanelName::SECOND
+                "panel-third",      // EPanelName::THIRD
+                "panel-fourth",     // EPanelName::FOURTH
+                "panel-fifth",      // EPanelName::FIFTH
+                "panel-sixth"       // EPanelName::SIXTH
+            };
+
+            panelNames = new List<string>(names);
+
+            foreach (string panelName in panelNames)
+            {
+                GameObject targetPanel = GameObject.Find(panelName);
+                if (null == targetPanel)
+                {
+                    Debug.LogError(panelName + " not found.");
+                    return;
+                }
+                panels.Add(targetPanel);
+            }
+        }
+
+        public void Start()
+        {
+            foreach(GameObject panel in panels)
+            {
+                panel.SetActive(false);
+            }
+            ActivePanel(EPanelName.INTRO);
+            curPanel = EPanelName.INTRO;
+        }
+
+        public bool InActivePanel(EPanelName panelName)
+        {
+            GameObject panel = panels[(int)panelName];
+            if(panel == null) return false;
+            panel.SetActive(false);
+            return true;
+        }
+
+        public bool ActivePanel(EPanelName panelName)
+        {
+            GameObject panel = panels[(int)panelName];
+            if (panel == null) return false;
+            panel.SetActive(true);
+            return true;
+        }
+
+
+
     }
 }
