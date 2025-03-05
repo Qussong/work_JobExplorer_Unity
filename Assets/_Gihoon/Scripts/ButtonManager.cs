@@ -5,31 +5,38 @@ using static UnityEngine.Rendering.DebugUI;
 
 namespace GH
 {
-    public enum EBtnPanelName
+    public enum EBtnPanelType
     {
-        TOP,
-        CENTER,
+        SECTION,
+        CONTENT,
+
         MAX_CNT,
         NONE,
     }
 
-    public enum EBtnName
+    public enum ESectionBtnType
     {
-        TOP_FIRST,      
-        TOP_SECOND,
-        TOP_THIRD,
-        TOP_FOURTH,
-        TOP_FIFTH,
-        CENTER_FIRST,   
-        CENTER_SECOND,
-        CENTER_THIRD,
-        CENTER_FOURTH,
-        CENTER_FIFTH,
-        CENTER_SIXTH,
+        SECTION_FIRST,
+        SECTION_SECOND,
+        SECTION_THIRD,
+        SECTION_FOURTH,
+        SECTION_FIFTH,
+        SECTION_SIXTH,
+
         MAX_CNT,
         NONE
     }
 
+    public enum EContentBtnType
+    {
+        CONTENT_FIRST,
+        CONTENT_SECOND,
+        CONTENT_THIRD,
+        CONTENT_FOURTH,
+
+        MAX_CNT,
+        NONE
+    }
 
     public class ButtonManager : MonoBehaviour
     {
@@ -82,27 +89,18 @@ namespace GH
         #endregion
 
         [Header("Essential Property")]
-        [SerializeField][ReadOnly] private string[] btnPanelNames = null;
-        [SerializeField][ReadOnly] private List<GameObject> buttonPanels = new List<GameObject>();
-        [SerializeField][ReadOnly] private List<string> buttonNames = null;
-        [SerializeField][ReadOnly] private List<GameObject> buttons = new List<GameObject>();
+        [SerializeField][ReadOnly][Tooltip("")] private List<GameObject> buttonPanels = new List<GameObject>();
+        [SerializeField][ReadOnly][Tooltip("")] private List<GameObject> sectionButtons = new List<GameObject>();
+        [SerializeField][ReadOnly][Tooltip("")] private List<GameObject> contentButtons = new List<GameObject>();
+
+        [SerializeField][Tooltip("")] Sprite[] contentButtonImges = new Sprite[5];
+        [SerializeField][Tooltip("")] Sprite[] selectedContentButtonImges = new Sprite[5];
+        [SerializeField][Tooltip("")] Sprite[] panelButtonImges = new Sprite[6];
 
         private void CustomAwake()
         {
-            btnPanelNames = new string[] { "panel-buttons-top", "panel-buttons-center" };
-
-            string[] names =
-            {
-                "btn-first",
-                "btn-second",
-                "btn-third",
-                "btn-fourth",
-                "btn-fifth",
-                "btn-sixth",
-            };
-            buttonNames = new List<string>(names);
-
             // Panel Setting
+            string[] btnPanelNames = new string[] { "panel-buttons-section", "panel-buttons-content" };
             foreach (string name in btnPanelNames)
             {
                 GameObject target = GameObject.Find(name);
@@ -114,129 +112,151 @@ namespace GH
                 buttonPanels.Add(target);
             }
 
-            // btn Setting
+            // Button Setting
             foreach (GameObject panel in buttonPanels)
             {
-                foreach (string btnName in buttonNames)
+                int childCnt = panel.GetComponent<Transform>().childCount;
+                for (int i = 0; i < childCnt; ++i)
                 {
-                    GameObject target = panel.GetComponent<Transform>().Find(btnName)?.gameObject;
-                    if (null == target)
+                    GameObject childButton = panel.GetComponent<Transform>().GetChild(i)?.gameObject;
+                    if (childButton != null)
                     {
-                        Debug.Log(btnName + " not found. (" + panel.name + ")");
-                    }
-                    else
-                    {
-                        buttons.Add(target);
+                        // Secion Button Setting
+                        if (panel.name == btnPanelNames[0])
+                        {
+                            sectionButtons.Add(childButton);
+                        }
+                        // Content Button Setting
+                        else if (panel.name == btnPanelNames[1])
+                        {
+                            contentButtons.Add(childButton);
+                        }
                     }
                 }
             }
+
         }
 
-        public void Start()
-        {
-            //
-        }
+        // 패널 변경
+        #region Panel Change
 
-        public void MoveToIntro()
+        public void MoveToIntroPanel()
         {
             // Btn Setting
-            InActiveBtnPanel(EBtnPanelName.TOP);
-            InActiveBtnPanel(EBtnPanelName.CENTER);
+            InActiveBtnPanel(EBtnPanelType.SECTION);
+            InActiveBtnPanel(EBtnPanelType.CONTENT);
 
-            EPanelName target = EPanelName.INTRO;
-            MoveTo(target);
-
-        }
-
-        public void MoveToMain()
-        {
-            ViewManager.Instance?.ActivePanel(EPanelName.MAIN);
-            ViewManager.Instance?.ActivePanel(EPanelName.CONTENT);
-            // Btn Setting
-            InActiveBtnPanel(EBtnPanelName.TOP);
-            ActiveBtnPanel(EBtnPanelName.CENTER);
-
-            EPanelName target = EPanelName.SELECTION;
+            EPanelType target = EPanelType.INTRO;
             MoveTo(target);
         }
 
-        public void MoveToFirst()
+        public void MoveToMainPanel()
         {
-            // Btn Setting
-            InActiveBtnPanel(EBtnPanelName.CENTER);
-            ActiveBtnPanel(EBtnPanelName.TOP);
+            ViewManager.Instance?.ActivePanel(EPanelType.MAIN);
+            ViewManager.Instance?.ActivePanel(EPanelType.CONTENT);
 
-            EPanelName target = EPanelName.FIRST;
-            Debug.Log(target.ToString());
+            // Btn Setting
+            ActiveBtnPanel(EBtnPanelType.SECTION);
+            InActiveBtnPanel(EBtnPanelType.CONTENT);
+
+            EPanelType target = EPanelType.SELECTION;
             MoveTo(target);
         }
 
-        public void MoveToSecond()
+        public void MoveToFirstPanel()
         {
             // Btn Setting
-            InActiveBtnPanel(EBtnPanelName.CENTER);
-            ActiveBtnPanel(EBtnPanelName.TOP);
+            ActiveBtnPanel(EBtnPanelType.CONTENT);
+            InActiveBtnPanel(EBtnPanelType.SECTION);
 
-            EPanelName target = EPanelName.SECOND;
-            Debug.Log(target.ToString());
-            MoveTo(target);
+            // Panel Setting
+            MoveTo(EPanelType.FIRST);
+
+            // Content Setting
+            MoveToFirstContent();
         }
 
-        public void MoveToThird()
+        public void MoveToSecondPanel()
         {
             // Btn Setting
-            InActiveBtnPanel(EBtnPanelName.CENTER);
-            ActiveBtnPanel(EBtnPanelName.TOP);
+            ActiveBtnPanel(EBtnPanelType.CONTENT);
+            InActiveBtnPanel(EBtnPanelType.SECTION);
 
-            EPanelName target = EPanelName.THIRD;
-            Debug.Log(target.ToString());
-            MoveTo(target);
+            // Panel Setting
+            MoveTo(EPanelType.SECOND);
+
+            // Content Setting
+            MoveToFirstContent();
         }
 
-        public void MoveToFourth()
+        public void MoveToThirdPanel()
         {
             // Btn Setting
-            InActiveBtnPanel(EBtnPanelName.CENTER);
-            ActiveBtnPanel(EBtnPanelName.TOP);
+            ActiveBtnPanel(EBtnPanelType.CONTENT);
+            InActiveBtnPanel(EBtnPanelType.SECTION);
 
-            EPanelName target = EPanelName.FOURTH;
-            Debug.Log(target.ToString());
-            MoveTo(target);
+            // Panel Setting
+            MoveTo(EPanelType.THIRD);
+
+            // Content Setting
+            MoveToFirstContent();
         }
 
-        public void MoveToFifth()
+        public void MoveToFourthPanel()
         {
             // Btn Setting
-            InActiveBtnPanel(EBtnPanelName.CENTER);
-            ActiveBtnPanel(EBtnPanelName.TOP);
+            ActiveBtnPanel(EBtnPanelType.CONTENT);
+            InActiveBtnPanel(EBtnPanelType.SECTION);
 
-            EPanelName target = EPanelName.FIFTH;
-            Debug.Log(target.ToString());
-            MoveTo(target);
+            // Panel Setting
+            MoveTo(EPanelType.FOURTH);
+
+            // Content Setting
+            MoveToFirstContent();
         }
 
-        public void MoveToSixth()
+        public void MoveToFifthPanel()
         {
             // Btn Setting
-            InActiveBtnPanel(EBtnPanelName.CENTER);
-            ActiveBtnPanel(EBtnPanelName.TOP);
+            ActiveBtnPanel(EBtnPanelType.CONTENT);
+            InActiveBtnPanel(EBtnPanelType.SECTION);
 
-            EPanelName target = EPanelName.SIXTH;
-            Debug.Log(target.ToString());
-            MoveTo(target);
+            // Panel Setting
+            MoveTo(EPanelType.FIFTH);
+
+            // Content Setting
+            MoveToFirstContent();
         }
 
-        private void MoveTo(EPanelName panel)
+        public void MoveToSixthPanel()
+        {
+            // Btn Setting
+            ActiveBtnPanel(EBtnPanelType.CONTENT);
+            InActiveBtnPanel(EBtnPanelType.SECTION);
+
+            // Panel Setting
+            MoveTo(EPanelType.SIXTH);
+
+            // Content Setting
+            MoveToFirstContent();
+        }
+
+        private void MoveTo(EPanelType panel)
         {
             ViewManager.Instance?.InActivePanel(ViewManager.Instance.CurPanel);
             ViewManager.Instance?.ActivePanel(panel);
             ViewManager.Instance.CurPanel = panel;
         }
 
-        public bool ActiveBtnPanel(EBtnPanelName panel)
+        #endregion
+
+        // 버튼 패널 ON/OFF
+        #region Button Panel ON/OFF
+
+        public bool ActiveBtnPanel(EBtnPanelType panel)
         {
             GameObject target = buttonPanels[(int)panel];
-            if(null == target)
+            if (null == target)
             {
                 Debug.Log("Button Panel (" + panel.ToString() + ") not found");
                 return false;
@@ -245,7 +265,7 @@ namespace GH
             return true;
         }
 
-        public bool InActiveBtnPanel(EBtnPanelName panel)
+        public bool InActiveBtnPanel(EBtnPanelType panel)
         {
             GameObject target = buttonPanels[(int)panel];
             if (null == target)
@@ -256,5 +276,33 @@ namespace GH
             target.SetActive(false);
             return true;
         }
+
+        #endregion
+
+        // 컨텐츠 변경
+        #region Content Change
+
+        public void MoveToFirstContent()
+        {
+            ContentManager.Instance.MoveTo(EContentType.FIRST, ViewManager.Instance.CurPanel);
+        }
+
+        public void MoveToSecondContent()
+        {
+            ContentManager.Instance.MoveTo(EContentType.SECOND, ViewManager.Instance.CurPanel);
+        }
+
+        public void MoveToThirdContent()
+        {
+            ContentManager.Instance.MoveTo(EContentType.THIRD, ViewManager.Instance.CurPanel);
+        }
+
+        public void MoveToFourthContent()
+        {
+            ContentManager.Instance.MoveTo(EContentType.FOURTH, ViewManager.Instance.CurPanel);
+        }
+
+        #endregion
+
     }
 }

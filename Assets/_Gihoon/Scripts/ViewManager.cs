@@ -25,18 +25,21 @@ namespace GH
     /// 
     /// </summary>
 
-    public enum EPanelName
+    public enum EPanelType
     {
         INTRO,
         MAIN,
         CONTENT,
         SELECTION,
+
+        // Content
         FIRST,
         SECOND,
         THIRD,
         FOURTH,
         FIFTH,
         SIXTH,
+
         MAX_CNT,
         NONE
     }
@@ -95,9 +98,9 @@ namespace GH
         [Header("Essential Property")]
         [SerializeField][ReadOnly] private List<string> panelNames = null;
         [SerializeField][ReadOnly] private List<GameObject> panels = new List<GameObject>();
-        [SerializeField][ReadOnly] private EPanelName curPanel = EPanelName.NONE;
+        [SerializeField][ReadOnly] private EPanelType curPanel = EPanelType.NONE;
 
-        public EPanelName CurPanel
+        public EPanelType CurPanel
         {
             get { return curPanel; }
             set { curPanel = value; }
@@ -110,6 +113,7 @@ namespace GH
                 "panel-main",       // EPanelName::MAIN
                 "panel-content",    // EPanelName::CONTENT
                 "panel-selection",  // EPanelName::SELECTION
+
                 "panel-first",      // EPanelName::FIRST
                 "panel-second",     // EPanelName::SECOND
                 "panel-third",      // EPanelName::THIRD
@@ -138,27 +142,25 @@ namespace GH
             {
                 panel.SetActive(false);
             }
-            ActivePanel(EPanelName.INTRO);
-            curPanel = EPanelName.INTRO;
+            ActivePanel(EPanelType.INTRO);
+            curPanel = EPanelType.INTRO;
         }
 
-        public bool InActivePanel(EPanelName panelName)
+        public bool InActivePanel(EPanelType panelType)
         {
-            GameObject panel = panels[(int)panelName];
+            GameObject panel = panels[(int)panelType];
             if(panel == null) return false;
             panel.SetActive(false);
             return true;
         }
 
-        public bool ActivePanel(EPanelName panelName)
+        public bool ActivePanel(EPanelType panelType)
         {
-            GameObject panel = panels[(int)panelName];
+            GameObject panel = panels[(int)panelType];
             if (panel == null) return false;
             panel.SetActive(true);
             return true;
         }
-
-
 
     }
 }

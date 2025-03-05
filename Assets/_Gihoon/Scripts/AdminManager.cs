@@ -7,8 +7,6 @@ namespace GH
 {
     public class AdminManager : MonoBehaviour
     {
-        [SerializeField][ReadOnly] private int touchCnt = 0;
-
         /// <summary>
         /// ¡é¡é¡é¡é¡é¡é¡é¡é¡é¡é¡é¡é¡é¡é¡é Singleton ¡é¡é¡é¡é¡é¡é¡é¡é¡é¡é¡é¡é¡é¡é¡é
         /// </summary>
@@ -62,14 +60,5 @@ namespace GH
 
         }
 
-        void TouchWait()
-        {
-
-        }
-
-        void QuitExit()
-        {
-            
-        }
     }
 }
