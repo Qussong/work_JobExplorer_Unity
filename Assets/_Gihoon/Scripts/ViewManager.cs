@@ -106,6 +106,19 @@ namespace GH
             set { curPanel = value; }
         }
 
+        public GameObject GetPanelObject(EPanelType panelType)
+        {
+            GameObject target = null;
+            int panelIdx = (int)panelType;
+
+            if(panels.Count > panelIdx)
+            {
+                target = panels[panelIdx];
+            }
+
+            return target;
+        }
+
         private void CustomAwake()
         {
             string[] names = {

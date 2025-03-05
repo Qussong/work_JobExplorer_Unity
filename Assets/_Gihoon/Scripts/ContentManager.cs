@@ -2,8 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime;
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEditor.Searcher.SearcherWindow.Alignment;
 
 namespace GH
 {
@@ -69,6 +71,7 @@ namespace GH
 
         #endregion
 
+
         [Header("Essential Property")]
         [SerializeField][ReadOnly] private Image contentImg = null; // Conent 가 그려질 Img Component
         [SerializeField][ReadOnly] private EContentType curContent = EContentType.NONE;
@@ -81,7 +84,7 @@ namespace GH
 
         private void CustomAwake()
         {
-            contentImg = gameObject.GetComponent<Image>();
+            //contentImg = gameObject.GetComponent<Image>();
             sprites = new Sprite[][]
             {
                 firstContentSprites,
@@ -89,14 +92,18 @@ namespace GH
                 thirdContentSprites,
                 fourthContentSprites,
             };
+
         }
 
         public void MoveTo(EContentType contentType, EPanelType panelType)
         {
             int curPanelIdx = (int)(panelType - EPanelType.FIRST);
             int curContentIdx = (int)contentType;
-            Sprite targetSprite = sprites[curPanelIdx][curContentIdx];
-            if(null != targetSprite)
+
+            SetContentImg(contentType);
+
+            /*Sprite targetSprite = sprites[curContentIdx][curPanelIdx];
+            if (null != targetSprite)
             {
                 contentImg.sprite = targetSprite;
                 curContent = contentType;
@@ -104,11 +111,48 @@ namespace GH
             else
             {
                 Debug.LogWarning(contentType.ToString() + " Sprite not found");
-            }
+            }*/
 
-            // test
-            curContent = contentType;
         }
 
+        public void SetContentImg(EContentType contentType)
+        {
+            /// <summary>
+            /// 
+            /// [스크롤 뷰의 구조]
+            /// Scroll View
+            /// ├── Viewport
+            /// │    ├── Content
+            /// 
+            /// </summary>
+
+            EPanelType curPanel = ViewManager.Instance.CurPanel;
+            GameObject curPanelObj = ViewManager.Instance.GetPanelObject(curPanel);
+            if (null == curPanelObj)
+            {
+                Debug.LogWarning(curPanel.ToString() + " Object not found");
+                return;
+            }
+
+            string scrollObjName = "scroll-content";
+            GameObject scrollObj = curPanelObj.GetComponent<Transform>().Find(scrollObjName)?.gameObject;
+            if (null == scrollObj)
+            {
+                Debug.LogWarning(scrollObjName + " Object not found");
+                return;
+            }
+
+            ScrollRect scrollRect = scrollObj.GetComponent<ScrollRect>();
+            GameObject content = scrollRect.content.gameObject;
+
+            Image img = content.GetComponent<Image>();
+
+            int curPanelIdx = (int)(curPanel - EPanelType.FIRST);
+            int contentIdx = (int)contentType;
+
+            Sprite targetSprite = sprites[contentIdx][curPanelIdx];
+            img.sprite = targetSprite;
+            img.SetNativeSize();
+        }
     }
 }
