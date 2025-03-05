@@ -146,6 +146,7 @@ namespace GH
             InActiveBtnPanel(EBtnPanelType.SECTION);
             InActiveBtnPanel(EBtnPanelType.CONTENT);
 
+            // Panel Setting
             EPanelType target = EPanelType.INTRO;
             MoveTo(target);
         }
@@ -159,8 +160,12 @@ namespace GH
             ActiveBtnPanel(EBtnPanelType.SECTION);
             InActiveBtnPanel(EBtnPanelType.CONTENT);
 
+            // Panel Setting
             EPanelType target = EPanelType.SELECTION;
             MoveTo(target);
+
+            // Scroll View Setting
+            ContentManager.Instance.TurnOffScrollView();
         }
 
         public void MoveToFirstPanel()
@@ -284,22 +289,22 @@ namespace GH
 
         public void MoveToFirstContent()
         {
-            ContentManager.Instance.MoveTo(EContentType.FIRST, ViewManager.Instance.CurPanel);
+            ContentManager.Instance.MoveTo(EContentType.FIRST);
         }
 
         public void MoveToSecondContent()
         {
-            ContentManager.Instance.MoveTo(EContentType.SECOND, ViewManager.Instance.CurPanel);
+            ContentManager.Instance.MoveTo(EContentType.SECOND);
         }
 
         public void MoveToThirdContent()
         {
-            ContentManager.Instance.MoveTo(EContentType.THIRD, ViewManager.Instance.CurPanel);
+            ContentManager.Instance.MoveTo(EContentType.THIRD);
         }
 
         public void MoveToFourthContent()
         {
-            ContentManager.Instance.MoveTo(EContentType.FOURTH, ViewManager.Instance.CurPanel);
+            ContentManager.Instance.MoveTo(EContentType.FOURTH);
         }
 
         #endregion

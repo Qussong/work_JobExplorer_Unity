@@ -75,16 +75,16 @@ namespace GH
         [Header("Essential Property")]
         [SerializeField][ReadOnly] private Image contentImg = null; // Conent 가 그려질 Img Component
         [SerializeField][ReadOnly] private EContentType curContent = EContentType.NONE;
-        //[SerializeField][Tooltip("")] private List<List<Sprite>> sprites; // 2차원 배열은 Ispector 창에 나타나지 않음
-        private Sprite[][] sprites = null;
+        private Sprite[][] sprites = null;  // 2차원 배열은 Ispector 창에 나타나지 않음
         [SerializeField][Tooltip("")] private Sprite[] firstContentSprites = new Sprite[6];
         [SerializeField][Tooltip("")] private Sprite[] secondContentSprites = new Sprite[6];
         [SerializeField][Tooltip("")] private Sprite[] thirdContentSprites = new Sprite[6];
         [SerializeField][Tooltip("")] private Sprite[] fourthContentSprites = new Sprite[6];
 
+        private ScrollRect contentScrollRect = null;
+
         private void CustomAwake()
         {
-            //contentImg = gameObject.GetComponent<Image>();
             sprites = new Sprite[][]
             {
                 firstContentSprites,
@@ -93,26 +93,31 @@ namespace GH
                 fourthContentSprites,
             };
 
+            string scrollObjName = "scroll-content";
+            contentScrollRect = GameObject.Find(scrollObjName)?.GetComponent<ScrollRect>();
+            if (null == contentScrollRect)
+            {
+                Debug.Log("Scroll Rect not found.");
+                return;
+            }
         }
 
-        public void MoveTo(EContentType contentType, EPanelType panelType)
+        public void Start()
         {
-            int curPanelIdx = (int)(panelType - EPanelType.FIRST);
-            int curContentIdx = (int)contentType;
+            if (null != contentScrollRect)
+            {
+                contentScrollRect.onValueChanged.AddListener(OnScrollChanged);
+            }
+        }
+
+        public void MoveTo(EContentType contentType)
+        {
+            // Scroll View Turn On
+            TurnOnScrollView();
+            // Scroll Bar Hand Init
+            contentScrollRect.onValueChanged.Invoke(contentScrollRect.normalizedPosition);
 
             SetContentImg(contentType);
-
-            /*Sprite targetSprite = sprites[curContentIdx][curPanelIdx];
-            if (null != targetSprite)
-            {
-                contentImg.sprite = targetSprite;
-                curContent = contentType;
-            }
-            else
-            {
-                Debug.LogWarning(contentType.ToString() + " Sprite not found");
-            }*/
-
         }
 
         public void SetContentImg(EContentType contentType)
@@ -126,33 +131,64 @@ namespace GH
             /// 
             /// </summary>
 
-            EPanelType curPanel = ViewManager.Instance.CurPanel;
-            GameObject curPanelObj = ViewManager.Instance.GetPanelObject(curPanel);
-            if (null == curPanelObj)
+            if (null != contentScrollRect)
             {
-                Debug.LogWarning(curPanel.ToString() + " Object not found");
-                return;
+                GameObject content = contentScrollRect.content.gameObject;
+                Image img = content.GetComponent<Image>();
+
+                EPanelType curPanel = ViewManager.Instance.CurPanel;
+                int curPanelIdx = (int)(curPanel - EPanelType.FIRST);
+                int contentIdx = (int)contentType;
+
+                Sprite targetSprite = sprites[contentIdx][curPanelIdx];
+                img.sprite = targetSprite;
+                img.SetNativeSize();
             }
 
-            string scrollObjName = "scroll-content";
-            GameObject scrollObj = curPanelObj.GetComponent<Transform>().Find(scrollObjName)?.gameObject;
-            if (null == scrollObj)
-            {
-                Debug.LogWarning(scrollObjName + " Object not found");
-                return;
-            }
-
-            ScrollRect scrollRect = scrollObj.GetComponent<ScrollRect>();
-            GameObject content = scrollRect.content.gameObject;
-
-            Image img = content.GetComponent<Image>();
-
-            int curPanelIdx = (int)(curPanel - EPanelType.FIRST);
-            int contentIdx = (int)contentType;
-
-            Sprite targetSprite = sprites[contentIdx][curPanelIdx];
-            img.sprite = targetSprite;
-            img.SetNativeSize();
         }
+
+        #region Scroll Setting
+
+        private void OnScrollChanged(Vector2 scrollPos)
+        {
+            float verticalPosRatio = contentScrollRect.verticalNormalizedPosition;
+            Debug.Log("Scrolled! Vertical : " + verticalPosRatio);
+
+            string scrollHandName = "img-scrollHand";
+            string scrollBarName = "img-scrollBar";
+            GameObject scrollHand = contentScrollRect.gameObject.GetComponent<Transform>().Find(scrollHandName)?.gameObject;
+            GameObject scrollBar = contentScrollRect.gameObject.GetComponent<Transform>().Find(scrollBarName)?.gameObject;
+
+            RectTransform scrollBarRectTransform = scrollBar.GetComponent<RectTransform>();
+            float height = scrollBarRectTransform.rect.height;
+            Vector2 pivot = scrollBarRectTransform.localPosition;
+
+            scrollHand.GetComponent<RectTransform>().localPosition = new Vector2(pivot.x, pivot.y - height / 2 + verticalPosRatio * height);
+        }
+
+        public void TurnOnScrollView()
+        {
+            if (null == contentScrollRect) return;
+
+            GameObject scrollView = contentScrollRect.gameObject;
+            if (false == scrollView.activeSelf)
+            {
+                scrollView.SetActive(true);
+            }
+        }
+
+        public void TurnOffScrollView()
+        {
+            if (null == contentScrollRect) return;
+
+            GameObject scrollView = contentScrollRect.gameObject;
+            if (true == scrollView.activeSelf)
+            {
+                scrollView.SetActive(false);
+            }
+        }
+
+        #endregion
+
     }
 }
