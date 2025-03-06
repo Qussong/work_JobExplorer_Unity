@@ -1238,6 +1238,8 @@ GameObject:
   - component: {fileID: 265691828}
   - component: {fileID: 265691830}
   - component: {fileID: 265691829}
+  - component: {fileID: 265691832}
+  - component: {fileID: 265691833}
   m_Layer: 0
   m_Name: img-cursor
   m_TagString: Untagged
@@ -1278,7 +1280,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -1302,6 +1304,35 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 265691827}
   m_CullTransparentMesh: 1
+--- !u!111 &265691832
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 265691827}
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Animation: {fileID: 7400000, guid: 6c3f8b841234130499b3afcfa5b09c01, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: 6c3f8b841234130499b3afcfa5b09c01, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 1
+  m_AnimatePhysics: 0
+  m_UpdateMode: 0
+  m_CullingType: 0
+--- !u!225 &265691833
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 265691827}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &268740732
 GameObject:
   m_ObjectHideFlags: 0
@@ -2713,6 +2744,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09580b928ea74e14faea7240f42e5388, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  resetTime: 5
+  resetTimer: 0
+  bTouch: 0
 --- !u!1 &574989176
 GameObject:
   m_ObjectHideFlags: 0
@@ -4508,7 +4542,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Button
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -5751,24 +5785,15 @@ MonoBehaviour:
   sectionButtons: []
   contentButtons: []
   contentButtonImges:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 21300000, guid: 572774776f5af83468d0d2d5ffd9393b, type: 3}
+  - {fileID: 21300000, guid: ebc75314e64766e4e9a9fd950f972863, type: 3}
+  - {fileID: 21300000, guid: aaf32e329f868284a89ca5ee16443dd8, type: 3}
+  - {fileID: 21300000, guid: 9e1df264bbd9f9643abfc4cdbcb90102, type: 3}
   selectedContentButtonImges:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  panelButtonImges:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 21300000, guid: 66ce9e2ba6290ff4b902faebfde40af5, type: 3}
+  - {fileID: 21300000, guid: e1b23880250a8e644af00ea6ca7dfe2c, type: 3}
+  - {fileID: 21300000, guid: a558f177218d09a4fb88ff93a3f67849, type: 3}
+  - {fileID: 21300000, guid: 593a672b44d572345b40b116488dc25a, type: 3}
 --- !u!1 &1494688165
 GameObject:
   m_ObjectHideFlags: 0

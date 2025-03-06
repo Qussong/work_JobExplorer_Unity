@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
+using UnityEngine.UI;
 using static UnityEngine.Rendering.DebugUI;
 
 namespace GH
@@ -93,9 +95,9 @@ namespace GH
         [SerializeField][ReadOnly][Tooltip("")] private List<GameObject> sectionButtons = new List<GameObject>();
         [SerializeField][ReadOnly][Tooltip("")] private List<GameObject> contentButtons = new List<GameObject>();
 
-        [SerializeField][Tooltip("")] Sprite[] contentButtonImges = new Sprite[5];
-        [SerializeField][Tooltip("")] Sprite[] selectedContentButtonImges = new Sprite[5];
-        [SerializeField][Tooltip("")] Sprite[] panelButtonImges = new Sprite[6];
+        [SerializeField][Tooltip("")] Sprite[] contentButtonImges = new Sprite[4];
+        [SerializeField][Tooltip("")] Sprite[] selectedContentButtonImges = new Sprite[4];
+        //[SerializeField][Tooltip("")] Sprite[] panelButtonImges = new Sprite[6];
 
         private void CustomAwake()
         {
@@ -142,6 +144,9 @@ namespace GH
 
         public void MoveToIntroPanel()
         {
+            ViewManager.Instance?.InActivePanel(EPanelType.MAIN);
+            ViewManager.Instance?.InActivePanel(EPanelType.CONTENT);
+
             // Btn Setting
             InActiveBtnPanel(EBtnPanelType.SECTION);
             InActiveBtnPanel(EBtnPanelType.CONTENT);
@@ -290,24 +295,54 @@ namespace GH
         public void MoveToFirstContent()
         {
             ContentManager.Instance.MoveTo(EContentType.FIRST);
+            SetSelectedContentBtnImg(EContentBtnType.CONTENT_FIRST);
         }
 
         public void MoveToSecondContent()
         {
             ContentManager.Instance.MoveTo(EContentType.SECOND);
+            SetSelectedContentBtnImg(EContentBtnType.CONTENT_SECOND);
         }
 
         public void MoveToThirdContent()
         {
             ContentManager.Instance.MoveTo(EContentType.THIRD);
+            SetSelectedContentBtnImg(EContentBtnType.CONTENT_THIRD);
         }
 
         public void MoveToFourthContent()
         {
             ContentManager.Instance.MoveTo(EContentType.FOURTH);
+            SetSelectedContentBtnImg(EContentBtnType.CONTENT_FOURTH);
         }
 
         #endregion
+
+        private void SetSelectedContentBtnImg(EContentBtnType btnType)
+        {
+            if(contentButtons.Count <= 0)
+            {
+                Debug.LogWarning("Content Btn Container is empty.");
+                return;
+            }
+
+            ResetContentBtnImg();
+
+            // Target Setting
+            Image targetImg = contentButtons[(int)btnType].GetComponent<Image>();
+            Sprite selectedBtnImg = selectedContentButtonImges[(int)btnType];
+            targetImg.sprite = selectedBtnImg;
+        }
+
+        private void ResetContentBtnImg()
+        {
+            for(int i = 0; i < contentButtons.Count; ++i)
+            {
+                Image targetImg = contentButtons[i].GetComponent<Image>();
+                Sprite selectedBtnImg = contentButtonImges[i];
+                targetImg.sprite = selectedBtnImg;
+            }
+        }
 
     }
 }

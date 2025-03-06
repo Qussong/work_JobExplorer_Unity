@@ -74,7 +74,7 @@ namespace GH
 
         [Header("Essential Property")]
         [SerializeField][ReadOnly] private Image contentImg = null; // Conent 가 그려질 Img Component
-        [SerializeField][ReadOnly] private EContentType curContent = EContentType.NONE;
+        [SerializeField][ReadOnly] public EContentType curContent = EContentType.NONE;
         private Sprite[][] sprites = null;  // 2차원 배열은 Ispector 창에 나타나지 않음
         [SerializeField][Tooltip("")] private Sprite[] firstContentSprites = new Sprite[6];
         [SerializeField][Tooltip("")] private Sprite[] secondContentSprites = new Sprite[6];
@@ -115,9 +115,11 @@ namespace GH
             // Scroll View Turn On
             TurnOnScrollView();
             // Scroll Bar Hand Init
+            contentScrollRect.verticalNormalizedPosition = 1.0f; // Scroll Hand 를 제일 위로 이동
             contentScrollRect.onValueChanged.Invoke(contentScrollRect.normalizedPosition);
 
             SetContentImg(contentType);
+            curContent = contentType;
         }
 
         public void SetContentImg(EContentType contentType)
