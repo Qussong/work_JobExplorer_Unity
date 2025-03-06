@@ -111,7 +111,7 @@ namespace GH
             GameObject target = null;
             int panelIdx = (int)panelType;
 
-            if(panels.Count > panelIdx)
+            if (panels.Count > panelIdx)
             {
                 target = panels[panelIdx];
             }
@@ -151,7 +151,7 @@ namespace GH
 
         public void Start()
         {
-            foreach(GameObject panel in panels)
+            foreach (GameObject panel in panels)
             {
                 panel.SetActive(false);
             }
@@ -159,10 +159,20 @@ namespace GH
             curPanel = EPanelType.INTRO;
         }
 
+        public void Update()
+        {
+            if (Input.touchCount > 0
+                || Input.GetMouseButtonDown(0))
+            {
+                SoundManager.Instance.PlayClickSound();
+            }
+
+        }
+
         public bool InActivePanel(EPanelType panelType)
         {
             GameObject panel = panels[(int)panelType];
-            if(panel == null) return false;
+            if (panel == null) return false;
             panel.SetActive(false);
             return true;
         }

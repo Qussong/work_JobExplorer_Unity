@@ -61,10 +61,21 @@ namespace GH
         #endregion
 
         [Header("Essential Property")]
-        [SerializeField] private float resetTime = 60.0f;
+        [SerializeField][ReadOnly] private float resetTime = 5.0f;   // 컨텐츠에 대한 다음 동작이 실행되기 전까지의 최대 대기 시간
+        [SerializeField][ReadOnly] private float quitTime = 10.0f;    // Quit 버튼을 입력할때 다음 동작이 실행되기 전까지의 최대 대기 시간
         [SerializeField][ReadOnly] private float resetTimer = 0.0f;
         private bool bReset = false;
         ClickHandler clickHandle = null;
+
+        public float ResetTime
+        {
+            get { return resetTime; }
+        }
+
+        public float QuitTime
+        {
+            get { return quitTime; }
+        }
 
         private void CustomAwake()
         {
@@ -131,7 +142,7 @@ namespace GH
 #if UNITY_EDITOR
             EditorApplication.isPlaying = false; // 에디터에서 실행 중이면 중지
 #else
-                    Application.Quit(); // 빌드된 게임에서는 종료
+            Application.Quit(); // 빌드된 게임에서는 종료
 #endif
         }
 

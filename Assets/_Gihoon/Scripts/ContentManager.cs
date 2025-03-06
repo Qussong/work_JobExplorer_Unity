@@ -71,9 +71,8 @@ namespace GH
 
         #endregion
 
-
         [Header("Essential Property")]
-        [SerializeField][ReadOnly] private Image contentImg = null; // Conent 가 그려질 Img Component
+        //[SerializeField][ReadOnly] private Image contentImg = null; // Content 가 그려질 Img Component
         [SerializeField][ReadOnly] public EContentType curContent = EContentType.NONE;
         private Sprite[][] sprites = null;  // 2차원 배열은 Ispector 창에 나타나지 않음
         [SerializeField][Tooltip("")] private Sprite[] firstContentSprites = new Sprite[6];
@@ -154,7 +153,7 @@ namespace GH
         private void OnScrollChanged(Vector2 scrollPos)
         {
             float verticalPosRatio = contentScrollRect.verticalNormalizedPosition;
-            Debug.Log("Scrolled! Vertical : " + verticalPosRatio);
+            //Debug.Log("Scrolled! Vertical : " + verticalPosRatio);
 
             string scrollHandName = "img-scrollHand";
             string scrollBarName = "img-scrollBar";

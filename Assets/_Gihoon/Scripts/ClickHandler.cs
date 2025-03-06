@@ -11,7 +11,6 @@ namespace GH
         [SerializeField][ReadOnly] private int touchCnt = 0;
         [SerializeField][ReadOnly] private bool bQuit = false;
         [SerializeField][ReadOnly] private float resetTimer = 0.0f;
-        [SerializeField][ReadOnly] private float resetTime = 10.0f;
 
         public int TouchCnt
         {
@@ -40,6 +39,7 @@ namespace GH
 
         private void QuitTimer()
         {
+            float resetTime = AdminManager.Instance.QuitTime;
             if (0 < touchCnt)
             {
                 resetTimer += Time.deltaTime;
