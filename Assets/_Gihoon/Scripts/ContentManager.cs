@@ -5,7 +5,7 @@ using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEditor.Searcher.SearcherWindow.Alignment;
+//using static UnityEditor.Searcher.SearcherWindow.Alignment;
 
 namespace GH
 {
@@ -161,7 +161,8 @@ namespace GH
             GameObject scrollBar = contentScrollRect.gameObject.GetComponent<Transform>().Find(scrollBarName)?.gameObject;
 
             RectTransform scrollBarRectTransform = scrollBar.GetComponent<RectTransform>();
-            float height = scrollBarRectTransform.rect.height;
+            //
+            float height = scrollBarRectTransform.rect.height * scrollBarRectTransform.localScale.y;
             Vector2 pivot = scrollBarRectTransform.localPosition;
 
             scrollHand.GetComponent<RectTransform>().localPosition = new Vector2(pivot.x, pivot.y - height / 2 + verticalPosRatio * height);

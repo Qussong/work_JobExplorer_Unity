@@ -5,8 +5,17 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/_Gihoon/Scenes/Hybrid-Quantum-Computing.unity
     guid: 37f71b76ab52e9540b93494bd3ddf452
+  - enabled: 0
+    path: Assets/_Gihoon/Scenes/Autonomous-Driving.unity
+    guid: d9544ae472532dc47a848ba67c476e50
+  - enabled: 0
+    path: Assets/_Gihoon/Scenes/Solid-State-Battery.unity
+    guid: 25e8f2ab88496cb4a926a794cb662453
+  - enabled: 1
+    path: Assets/_Gihoon/Scenes/Space-Industry.unity
+    guid: 829468ef50c33d740a0cb75601c692df
   m_configObjects: {}
   m_UseUCBPForAssetBundles: 0

@@ -38,7 +38,7 @@ namespace GH
 #if UNITY_EDITOR
 
 #else
-    listenIp = File.ReadAllText(Path.Combine(Application.streamingAssetsPath, "TargetIP.txt")).Trim();
+    //listenIp = File.ReadAllText(Path.Combine(Application.streamingAssetsPath, "TargetIP.txt")).Trim();
 #endif
         }
 
