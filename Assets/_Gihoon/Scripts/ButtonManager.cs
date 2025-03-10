@@ -123,7 +123,7 @@ namespace GH
                     GameObject childButton = panel.GetComponent<Transform>().GetChild(i)?.gameObject;
                     if (childButton != null)
                     {
-                        // Secion Button Setting
+                        // Section Button Setting
                         if (panel.name == btnPanelNames[0])
                         {
                             sectionButtons.Add(childButton);
@@ -263,6 +263,7 @@ namespace GH
         // 버튼 패널 ON/OFF
         #region Button Panel ON/OFF
 
+        // 버튼 활성화
         public bool ActiveBtnPanel(EBtnPanelType panel)
         {
             GameObject target = buttonPanels[(int)panel];
@@ -275,6 +276,7 @@ namespace GH
             return true;
         }
 
+        // 버튼 비 활성화
         public bool InActiveBtnPanel(EBtnPanelType panel)
         {
             GameObject target = buttonPanels[(int)panel];

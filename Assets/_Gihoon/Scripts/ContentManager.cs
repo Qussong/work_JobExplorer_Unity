@@ -186,15 +186,7 @@ namespace GH
             float verticalPosRatio = contentScrollRect.verticalNormalizedPosition;
             //Debug.Log("Scrolled! Vertical : " + verticalPosRatio);
 
-            /*
-            string scrollHandName = "img-scrollHand";
-            string scrollBarName = "img-scrollBar";
-            GameObject scrollHand = contentScrollRect.gameObject.GetComponent<Transform>().Find(scrollHandName)?.gameObject;
-            GameObject scrollBar = contentScrollRect.gameObject.GetComponent<Transform>().Find(scrollBarName)?.gameObject;
-            */
-
             RectTransform scrollBarRectTransform = scrollBar.GetComponent<RectTransform>();
-            //
             float height = scrollBarRectTransform.rect.height * scrollBarRectTransform.localScale.y;
             Vector2 pivot = scrollBarRectTransform.localPosition;
 
