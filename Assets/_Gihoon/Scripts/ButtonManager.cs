@@ -170,7 +170,7 @@ namespace GH
             MoveTo(target);
 
             // Scroll View Setting
-            ContentManager.Instance.TurnOffScrollView();
+            ContentManager.Instance.TurnOffScrollViewer();
         }
 
         public void MoveToFirstPanel()

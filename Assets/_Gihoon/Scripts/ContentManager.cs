@@ -80,6 +80,7 @@ namespace GH
         [SerializeField][Tooltip("")] private Sprite[] thirdContentSprites = new Sprite[6];
         [SerializeField][Tooltip("")] private Sprite[] fourthContentSprites = new Sprite[6];
 
+        private GameObject scrollContainer = null;
         private ScrollRect contentScrollRect = null;
         private GameObject scrollBar = null;
         private GameObject scrollHand = null;
@@ -100,14 +101,14 @@ namespace GH
             };
 
             string scrollObjName = "scroll-content";
-            GameObject scrollContent = GameObject.Find(scrollObjName);
-            if(null == scrollContent)
+            scrollContainer = GameObject.Find(scrollObjName);
+            if(null == scrollContainer)
             {
                 Debug.LogError("Scroll Content not found.");
                 return;
             }
 
-            contentScrollRect = scrollContent?.GetComponent<ScrollRect>();
+            contentScrollRect = scrollContainer?.GetComponent<ScrollRect>();
             if (null == contentScrollRect)
             {
                 Debug.LogError("Scroll Rect not found.");
@@ -116,8 +117,8 @@ namespace GH
 
             string scrollHandName = "img-scrollHand";
             string scrollBarName = "img-scrollBar";
-            scrollBar = scrollContent.GetComponent<Transform>().Find(scrollBarName)?.gameObject;
-            scrollHand = scrollContent.GetComponent<Transform>().Find(scrollHandName)?.gameObject;
+            scrollBar = scrollContainer.GetComponent<Transform>().Find(scrollBarName)?.gameObject;
+            scrollHand = scrollContainer.GetComponent<Transform>().Find(scrollHandName)?.gameObject;
             if(null == scrollHand || null == scrollBar)
             {
                 Debug.LogError("Scroll Component not found.");
@@ -143,7 +144,7 @@ namespace GH
         public void MoveTo(EContentType contentType)
         {
             // Scroll View Turn On
-            TurnOnScrollView();
+            TurnOnScrollViewer();
             // Scroll Bar Hand Init
             contentScrollRect.verticalNormalizedPosition = 1.0f; // Scroll Hand 를 제일 위로 이동
             contentScrollRect.onValueChanged.Invoke(contentScrollRect.normalizedPosition);
@@ -175,6 +176,9 @@ namespace GH
                 Sprite targetSprite = sprites[contentIdx][curPanelIdx];
                 img.sprite = targetSprite;
                 img.SetNativeSize();
+
+                float spriteImgHeight = targetSprite.rect.height;
+                AutoHideScroller(spriteImgHeight);
             }
 
         }
@@ -193,7 +197,7 @@ namespace GH
             scrollHand.GetComponent<RectTransform>().localPosition = new Vector2(pivot.x, pivot.y - height / 2 + verticalPosRatio * height);
         }
 
-        public void TurnOnScrollView()
+        public void TurnOnScrollViewer()
         {
             if (null == contentScrollRect) return;
 
@@ -204,7 +208,7 @@ namespace GH
             }
         }
 
-        public void TurnOffScrollView()
+        public void TurnOffScrollViewer()
         {
             if (null == contentScrollRect) return;
 
@@ -213,6 +217,30 @@ namespace GH
             {
                 scrollView.SetActive(false);
             }
+        }
+        public void AutoHideScroller(float targetHeight)
+        {
+            float contentViewerHeight = scrollContainer.GetComponent<RectTransform>().rect.height;
+            if(targetHeight < contentViewerHeight)
+            {
+                TurnOffScroller();
+            }
+            else
+            {
+                TurnOnScroller();
+            }
+        }
+
+        void TurnOnScroller()
+        {
+            scrollBar.SetActive(true);
+            scrollHand.SetActive(true);
+        }
+
+        void TurnOffScroller()
+        {
+            scrollBar.SetActive(false);
+            scrollHand.SetActive(false);
         }
 
         #endregion
