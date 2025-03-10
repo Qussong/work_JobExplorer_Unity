@@ -81,6 +81,13 @@ namespace GH
         [SerializeField][Tooltip("")] private Sprite[] fourthContentSprites = new Sprite[6];
 
         private ScrollRect contentScrollRect = null;
+        private GameObject scrollBar = null;
+        private GameObject scrollHand = null;
+
+        public ScrollRect ContentScrollRect
+        {
+            get { return contentScrollRect; }
+        }
 
         private void CustomAwake()
         {
@@ -93,12 +100,33 @@ namespace GH
             };
 
             string scrollObjName = "scroll-content";
-            contentScrollRect = GameObject.Find(scrollObjName)?.GetComponent<ScrollRect>();
-            if (null == contentScrollRect)
+            GameObject scrollContent = GameObject.Find(scrollObjName);
+            if(null == scrollContent)
             {
-                Debug.Log("Scroll Rect not found.");
+                Debug.LogError("Scroll Content not found.");
                 return;
             }
+
+            contentScrollRect = scrollContent?.GetComponent<ScrollRect>();
+            if (null == contentScrollRect)
+            {
+                Debug.LogError("Scroll Rect not found.");
+                return;
+            }
+
+            string scrollHandName = "img-scrollHand";
+            string scrollBarName = "img-scrollBar";
+            scrollBar = scrollContent.GetComponent<Transform>().Find(scrollBarName)?.gameObject;
+            scrollHand = scrollContent.GetComponent<Transform>().Find(scrollHandName)?.gameObject;
+            if(null == scrollHand || null == scrollBar)
+            {
+                Debug.LogError("Scroll Component not found.");
+                return;
+            }
+
+            // add Scroll Hand Touch Component
+            scrollHand.AddComponent<ScrollHandler>();
+
         }
 
         public void Start()
@@ -107,6 +135,9 @@ namespace GH
             {
                 contentScrollRect.onValueChanged.AddListener(OnScrollChanged);
             }
+
+            scrollHand.GetComponent<RectTransform>().anchoredPosition = new Vector2(400.0f, 100.0f);
+            scrollBar.GetComponent<RectTransform>().anchoredPosition = new Vector2(400.0f, 100.0f);
         }
 
         public void MoveTo(EContentType contentType)
@@ -155,10 +186,12 @@ namespace GH
             float verticalPosRatio = contentScrollRect.verticalNormalizedPosition;
             //Debug.Log("Scrolled! Vertical : " + verticalPosRatio);
 
+            /*
             string scrollHandName = "img-scrollHand";
             string scrollBarName = "img-scrollBar";
             GameObject scrollHand = contentScrollRect.gameObject.GetComponent<Transform>().Find(scrollHandName)?.gameObject;
             GameObject scrollBar = contentScrollRect.gameObject.GetComponent<Transform>().Find(scrollBarName)?.gameObject;
+            */
 
             RectTransform scrollBarRectTransform = scrollBar.GetComponent<RectTransform>();
             //
