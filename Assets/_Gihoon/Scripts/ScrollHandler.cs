@@ -33,10 +33,6 @@ namespace GH
                 Debug.LogError("Scroll-Hand RectTransform not found.");
                 return;
             }
-            //scrollerRectTransform.localPosition = Vector3.zero;    // 부모기준 상대적인 위치 
-            //scrollerRectTransform.anchoredPosition = Vector3.zero; // 부모의 pivot 과 anchor 기준으로 상대적인 위치
-            // anchor : 부모의 RectTransform 의 기준
-            // pivot : UI요소 자기 자신의 중심점(기준)
 
             string scrollBarName = "img-scrollBar";
             Transform parentTransform = gameObject.transform.parent;
@@ -82,17 +78,6 @@ namespace GH
             float curPosRatio = (newY - bottomLimit) / scrollRange;
             ScrollControl(curPosRatio);
 
-            //if (curLocalPos.y <= topLimit && curLocalPos.y >= bottomLimit)
-            //{
-            //    scrollHandRectTransform.anchoredPosition += new Vector2(0.0f, eventData.delta.y / canvas.scaleFactor);
-            //}
-            //else
-            //{
-            //    scrollHandRectTransform.anchoredPosition = new Vector2(curLocalPos.x, curLocalPos.y > topLimit ? topLimit : bottomLimit);
-            //}
-            //
-            //float curPosRatio = (curLocalPos.y - bottomLimit) / scrollRange;
-            //ScrollControl(curPosRatio);
         }
 
         public void OnPointerUp(PointerEventData eventData)
