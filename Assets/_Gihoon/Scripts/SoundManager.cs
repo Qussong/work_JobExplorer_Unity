@@ -66,6 +66,7 @@ namespace GH
         {
             // Audio Setting
             audioSource = gameObject.AddComponent<AudioSource>();
+            audioSource.volume = 0.4f;  // range : 0f ~ 1f
         }
 
         public void PlayClickSound()

@@ -161,34 +161,19 @@ namespace GH
 
         public void Update()
         {
-            if (Input.touchCount > 0
-                || Input.GetMouseButtonDown(0))
+            ClickSound();
+
+        }
+
+        private void ClickSound()
+        {   
+            bool beginTouch = (Input.touchCount > 0) && (Input.GetTouch(0).phase == TouchPhase.Began);
+            bool beginClick = Input.GetMouseButtonDown(0);
+
+            if (beginTouch || beginClick)
             {
                 SoundManager.Instance.PlayClickSound();
             }
-
-
-            // 수정 예시 코드 (반영 예정)
-            /*
-            private bool isTouching = false;
-
-            public void Update()
-            {
-                if (Input.touchCount > 0 || Input.GetMouseButtonDown(0))
-                {
-                    if (!isTouching) // 첫 번째 터치나 클릭일 때만 소리 재생
-                    {
-                        SoundManager.Instance.PlayClickSound();
-                        isTouching = true; // 터치 시작 상태로 설정
-                    }
-                }
-                else if (Input.touchCount == 0 && !Input.GetMouseButton(0))
-                {
-                    isTouching = false; // 터치나 클릭이 끝났으면 상태 초기화
-                }
-            }
-            */
-
         }
 
         public bool InActivePanel(EPanelType panelType)
